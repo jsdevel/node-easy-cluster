@@ -55,31 +55,20 @@ describe('Cluster', function() {
     });
 
     it('increments the index when called more than once', function(done){
-      Cluster.create({workerPath:'asdf'}, function(err, id){
-        id.should.equal(0);
+      createClusters(function(){
         Cluster.create({workerPath:'asdf'}, function(err, id){
-          id.should.equal(1);
-          Cluster.create({workerPath:'asdf'}, function(err, id){
-            id.should.equal(2);
-            done();
-          });
+          id.should.equal(3);
+          done();
         });
       });
     });
 
     it('uses old indexes when clusters are deleted', function(done){
-      Cluster.create({workerPath:'asdf'}, function(err, id){
-        id.should.equal(0);
-        Cluster.create({workerPath:'asdf'}, function(err, id){
-          id.should.equal(1);
+      createClusters(function(){
+        Cluster.delete(1, function(err, id){
           Cluster.create({workerPath:'asdf'}, function(err, id){
-            id.should.equal(2);
-            Cluster.delete(1, function(err, id){
-              Cluster.create({workerPath:'asdf'}, function(err, id){
-                id.should.equal(1);
-                done();
-              });
-            });
+            id.should.equal(1);
+            done();
           });
         });
       });
@@ -103,4 +92,105 @@ describe('Cluster', function() {
       });
     });
   });
+
+  describe('#read', function() {
+    describe('query all', function() {
+      it('returns empty array when no cluster exists', function(done) {
+        Cluster.read(function(err, results){
+          assert(!err);
+          results.should.be.an.Array;
+          done();
+        });
+      });
+
+      describe('when clusters exist', function() {
+        beforeEach(createClusters);
+
+        it('should return an array of clusters', function(done) {
+          Cluster.delete(1, function(){
+            Cluster.read(function(err, results){
+              assert(!err);
+              results.should.be.an.Array;
+              results.should.match([
+                {id:0, workerPath:'/some/path/0'},
+                {id:2, workerPath:'/some/path/2'}
+              ]);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    describe('query byId', function() {
+      it('returns null when no cluster exists with the given id', function(done) {
+        Cluster.read(1, function(err, results){
+          assert(!err);
+          assert(results === null);
+          done();
+        });
+      });
+
+      describe('when clusters exist', function() {
+        beforeEach(createClusters);
+
+        it('returns the matching cluster', function() {
+          Cluster.read(1, function(err, results){
+            assert(!err);
+            results.should.match({
+              id:1,
+              workerPath:'/some/path/1'
+            });
+          });
+        });
+      });
+    });
+
+    describe('query byName', function() {
+      it('returns null when no cluster exists with the given name', function(done) {
+        Cluster.read('foomanchu', function(err, results){
+          assert(!err);
+          assert(results === null);
+          done();
+        });
+      });
+
+      describe('when clusters exist', function() {
+        beforeEach(createClusters);
+
+        it('returns the matching cluster', function() {
+          Cluster.read('foomanchu', function(err, results){
+            assert(!err);
+            results.should.match({
+              id:1,
+              name:'foomanchu',
+              workerPath:'/some/path/1'
+            });
+          });
+        });
+      });
+    });
+
+    describe('query by unknown type', function() {
+      it('provides an Error to callback', function() {
+        Cluster.read(void 0, function(err, results){
+          assert(!results);
+          err.should.be.an.instanceOf(Error);
+        });
+      });
+    });
+  });
+
+  function createClusters(cb){
+    Cluster.create({workerPath:'/some/path/0'}, function(err, id){
+      id.should.equal(0);
+      Cluster.create({name: 'foomanchu', workerPath:'/some/path/1'}, function(err, id){
+        id.should.equal(1);
+        Cluster.create({workerPath:'/some/path/2'}, function(err, id){
+          id.should.equal(2);
+          cb();
+        });
+      });
+    });
+  }
 });
