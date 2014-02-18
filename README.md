@@ -1,6 +1,6 @@
 easy-cluster
 ======================
-[![Build Status](https://travis-ci.org/godaddy/node-easy-cluster.png)](https://travis-ci.org/godaddy/node-easy-cluster)
+[![Build Status](https://travis-ci.org/jsdevel/node-easy-cluster.png)](https://travis-ci.org/jsdevel/node-easy-cluster)
 
 ````
                                      ^
