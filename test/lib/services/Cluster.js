@@ -73,6 +73,15 @@ describe('Cluster', function() {
         });
       });
     });
+
+    it('does not allow multiple clusters to have the same name', function(done) {
+      createClusters(function(){
+        Cluster.create({name:'foomanchu', workerPath:'/asdf/asdf/doo'}, function(err, index){
+          assert(err);
+          done();
+        });
+      });
+    });
   });
 
   describe('#delete', function() {
@@ -187,6 +196,15 @@ describe('Cluster', function() {
         assert(!results);
         err.should.be.an.instanceOf(Error);
         done();
+      });
+    });
+
+    it('does not allow multiple clusters to have the same name', function(done) {
+      createClusters(function(){
+        Cluster.update(0, {name:'foomanchu'}, function(err, index){
+          assert(err);
+          done();
+        });
       });
     });
 
