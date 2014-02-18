@@ -181,6 +181,49 @@ describe('Cluster', function() {
     });
   });
 
+  describe('#update', function() {
+    it('provides error on unknown query type', function(done){
+      Cluster.update([], {}, function(err, results){
+        assert(!results);
+        err.should.be.an.instanceOf(Error);
+        done();
+      });
+    });
+
+    describe('when no cluster exists', function(){
+      it('provides an Error to callback', function(done) {
+        Cluster.update(0, {}, function(err, results){
+          assert(!results);
+          err.should.be.an.instanceOf(Error);
+          done();
+        });
+      });
+    });
+
+    describe('when cluster exists', function() {
+      beforeEach(createClusters);
+      it('returns the results', function() {
+        Cluster.update(0, {name:'dog', workerPath:'/some/new/path/0'}, function(err, results){
+          assert(!err);
+          results.workerPath.should.equal('/some/new/path/0');
+          results.name.should.equal('dog');
+        });
+      });
+    });
+  });
+
+  describe('Cluster', function() {
+    describe('#handleUpdate', function() {
+      beforeEach(createClusters);
+      it('does not require workerPath if workerPath is already set on the Cluster', function(done) {
+        Cluster.read(0, function(err, cluster){
+          cluster.handleUpdate({});
+          done();
+        });
+      });
+    });
+  });
+
   function createClusters(cb){
     Cluster.create({workerPath:'/some/path/0'}, function(err, id){
       id.should.equal(0);
