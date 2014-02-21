@@ -61,6 +61,14 @@ describe('Cluster', function() {
       });
     });
 
+    it('waits for a startupTime', function(done){
+      var start = Date.now();
+      Cluster.create({workerPath:'ddd', startupTime:1000}, function(err, id){
+        (Date.now() - start).should.be.above(1000);
+        done();
+      });
+    });
+
     it('creates a new NeverEndingProcess', function(done){
       Cluster.create({workerPath:'foo'}, function(err, id){
         Cluster.read(id, function(err, cluster){
