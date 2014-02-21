@@ -7,14 +7,21 @@ describe('Cluster', function() {
   var fsHelpers = {
     fileExists:null
   };
+  var processInstance = {
+    startupError:null
+  };
+  var NeverEndingProcess = sinon.stub().returns(processInstance);
   var modulePath = '../../../lib/services/Cluster';
   var Cluster;
 
   beforeEach(function() {
     delete require.cache[modulePath];
     Cluster = prequire(modulePath, {
-      '../util/fsHelpers':fsHelpers
+      '../util/fsHelpers':fsHelpers,
+      '../util/abstractions/NeverEndingProcess':NeverEndingProcess
     });
+    NeverEndingProcess.reset();
+    processInstance.startupError = null;
     fsHelpers.fileExists = sinon.stub().returns(true);
     fsHelpers.fileExists.reset();
   });
@@ -50,6 +57,25 @@ describe('Cluster', function() {
       Cluster.create({workerPath:'asdf'}, function(err, id){
         err.should.be.an.instanceOf(Error);
         err.message.should.equal('workerPath: asdf is not an existing file.');
+        done();
+      });
+    });
+
+    it('creates a new NeverEndingProcess', function(done){
+      Cluster.create({workerPath:'foo'}, function(err, id){
+        Cluster.read(id, function(err, cluster){
+          cluster.master.should.equal(processInstance);
+          sinon.assert.calledWithNew(NeverEndingProcess);
+          sinon.assert.calledWith(NeverEndingProcess, 'foo');
+          done();
+        });
+      });
+    });
+
+    it('returns an Error when startupError on master exists', function(done){
+      processInstance.startupError = 'foo';
+      Cluster.create({workerPath:'asdf'}, function(err, id){
+        err.should.equal('foo');
         done();
       });
     });
