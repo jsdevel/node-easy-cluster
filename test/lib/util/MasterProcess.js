@@ -1,6 +1,6 @@
 'use strict';
 
-describe('NeverEndingProcess', function() {
+describe('MasterProcess', function() {
   var assert = require('assert');
   var prequire = require('proxyquire');
   var path = require('path');
@@ -13,7 +13,7 @@ describe('NeverEndingProcess', function() {
   var childProcess = {
     spawn:spawn
   };
-  var Module = prequire('../../../lib/util/NeverEndingProcess', {
+  var Module = prequire('../../../lib/util/MasterProcess', {
     'child_process':childProcess
   });
   var workerPath = 'workerPath';
