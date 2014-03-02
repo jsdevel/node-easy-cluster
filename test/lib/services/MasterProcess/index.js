@@ -13,8 +13,12 @@ describe('MasterProcess', function() {
   var childProcess = {
     spawn:spawn
   };
+  var fsHelpers = {
+    fileExists: sinon.stub()
+  };
   var MasterProcess = prequire('../../../../lib/services/MasterProcess', {
-    'child_process':childProcess
+    'child_process':childProcess,
+    '../../util/fsHelpers': fsHelpers
   });
   var workerPath = 'workerPath';
   var clusterStrategy = 'simple';
@@ -22,6 +26,8 @@ describe('MasterProcess', function() {
   beforeEach(function() {
     master.on.reset();
     childProcess.spawn.reset();
+    fsHelpers.fileExists.reset();
+    fsHelpers.fileExists.returns(true);
   });
 
   it('starts the workerPath with a default strategy', function() {
@@ -56,6 +62,17 @@ describe('MasterProcess', function() {
       sinon.match.array,
       sinon.match.object
     );
+  });
+
+  it('throws an error if the strategy does not exist', function() {
+    fsHelpers.fileExists.returns(false);
+    assert.throws(function(){
+      new MasterProcess({
+        workerPath: workerPath,
+        strategy: 'asdfasdf'
+      });
+    });
+    sinon.assert.calledWith(fsHelpers.fileExists, getPathOf('asdfasdf'));
   });
 
   describe('on closing', function() {
