@@ -30,7 +30,7 @@ describe('MasterProcess', function() {
     });
     sinon.assert.calledWith(
       spawn,
-      path.resolve(__dirname, '../../../../lib/services/MasterProcess/strategies/simple.js'),
+      getPathOf('simple'),
       sinon.match([
         '--workerPath',
         workerPath
@@ -43,6 +43,19 @@ describe('MasterProcess', function() {
     sinon.assert.calledWith(on, 'close', sinon.match.func);
     process.workerPath.should.equal(workerPath);
     process.master.should.equal(master);
+  });
+
+  it('allows the strategy to be configurable', function() {
+    var process = new MasterProcess({
+      workerPath: workerPath,
+      strategy: 'graceful'
+    });
+    sinon.assert.calledWith(
+      spawn,
+      getPathOf('graceful'),
+      sinon.match.array,
+      sinon.match.object
+    );
   });
 
   describe('on closing', function() {
@@ -58,4 +71,11 @@ describe('MasterProcess', function() {
       process.startupError.should.be.an.instanceOf(Error);
     });
   });
+
+  function getPathOf(strategy){
+    return path.resolve(
+      __dirname,
+      '../../../../lib/services/MasterProcess/strategies/'+strategy+'.js'
+    );
+  }
 });
