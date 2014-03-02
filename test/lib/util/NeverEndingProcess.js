@@ -1,6 +1,7 @@
 'use strict';
 
 describe('NeverEndingProcess', function() {
+  var assert = require('assert');
   var prequire = require('proxyquire');
   var path = require('path');
   var sinon = require('sinon');
@@ -41,8 +42,14 @@ describe('NeverEndingProcess', function() {
     process.master.should.equal(master);
   });
 
-  describe('on bad exit codes', function() {
-    it('sets startupError', function() {
+  describe('on closing', function() {
+    it('sets no startupError if code is falsey', function(){
+      var process = new Module(workerPath);
+      process.master.on.args[0][1](0);
+      assert.equal(process.startupError, null);
+    });
+
+    it('sets startupError if code is truthy', function() {
       var process = new Module(workerPath);
       process.master.on.args[0][1](1);
       process.startupError.should.be.an.instanceOf(Error);
