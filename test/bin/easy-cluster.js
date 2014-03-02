@@ -27,10 +27,10 @@ describe('easy-cluster', function() {
   });
 
   describe('when no port is given', function() {
-    it('defaults port to 0', function(){
+    it('defaults port to 18675', function(){
       process.argv.splice(4, 2);
       setModule();
-      server.args[0][0].port.should.equal(0);
+      server.args[0][0].port.should.equal(18675);
     });
   });
 

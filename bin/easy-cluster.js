@@ -4,6 +4,6 @@ var argv = require('minimist')(process.argv.slice(2), {
 });
 var server = require('../server');
 
-if(!argv.port)argv.port = 0;
+if(!argv.port)argv.port = 18675;
 
 server(argv);
