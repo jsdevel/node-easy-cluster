@@ -18,7 +18,7 @@ describe('Cluster', function() {
     delete require.cache[modulePath];
     Cluster = prequire(modulePath, {
       '../util/fsHelpers':fsHelpers,
-      '../util/MasterProcess':MasterProcess
+      './MasterProcess':MasterProcess
     });
     MasterProcess.reset();
     processInstance.startupError = null;

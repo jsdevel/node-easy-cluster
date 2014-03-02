@@ -13,7 +13,7 @@ describe('MasterProcess', function() {
   var childProcess = {
     spawn:spawn
   };
-  var Module = prequire('../../../lib/util/MasterProcess', {
+  var Module = prequire('../../../../lib/services/MasterProcess', {
     'child_process':childProcess
   });
   var workerPath = 'workerPath';
@@ -27,7 +27,7 @@ describe('MasterProcess', function() {
     var process = new Module(workerPath);
     sinon.assert.calledWith(
       spawn,
-      path.resolve(__dirname, '../../../lib/util/scripts/master.js'),
+      path.resolve(__dirname, '../../../../lib/services/MasterProcess/scripts/master.js'),
       sinon.match([
         '--workerPath',
         workerPath
