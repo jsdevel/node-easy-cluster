@@ -13,7 +13,7 @@ describe('MasterProcess', function() {
   var childProcess = {
     spawn:spawn
   };
-  var Module = prequire('../../../../lib/services/MasterProcess', {
+  var MasterProcess = prequire('../../../../lib/services/MasterProcess', {
     'child_process':childProcess
   });
   var workerPath = 'workerPath';
@@ -24,7 +24,7 @@ describe('MasterProcess', function() {
   });
 
   it('starts the workerPath', function() {
-    var process = new Module(workerPath);
+    var process = new MasterProcess(workerPath);
     sinon.assert.calledWith(
       spawn,
       path.resolve(__dirname, '../../../../lib/services/MasterProcess/scripts/master.js'),
@@ -44,13 +44,13 @@ describe('MasterProcess', function() {
 
   describe('on closing', function() {
     it('sets no startupError if code is falsey', function(){
-      var process = new Module(workerPath);
+      var process = new MasterProcess(workerPath);
       process.master.on.args[0][1](0);
       assert.equal(process.startupError, null);
     });
 
     it('sets startupError if code is truthy', function() {
-      var process = new Module(workerPath);
+      var process = new MasterProcess(workerPath);
       process.master.on.args[0][1](1);
       process.startupError.should.be.an.instanceOf(Error);
     });
