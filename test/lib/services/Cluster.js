@@ -18,7 +18,7 @@ describe('Cluster', function() {
     delete require.cache[modulePath];
     Cluster = prequire(modulePath, {
       '../util/fsHelpers':fsHelpers,
-      '../util/abstractions/NeverEndingProcess':NeverEndingProcess
+      '../util/NeverEndingProcess':NeverEndingProcess
     });
     NeverEndingProcess.reset();
     processInstance.startupError = null;
@@ -64,7 +64,7 @@ describe('Cluster', function() {
     it('waits for a startupTime', function(done){
       var start = Date.now();
       Cluster.create({workerPath:'ddd', startupTime:1000}, function(err, id){
-        (Date.now() - start).should.be.above(1000);
+        (Date.now() - start).should.be.approximately(1000, 30);
         done();
       });
     });
