@@ -74,7 +74,9 @@ describe('Cluster', function() {
         Cluster.read(id, function(err, cluster){
           cluster.master.should.equal(processInstance);
           sinon.assert.calledWithNew(MasterProcess);
-          sinon.assert.calledWith(MasterProcess, 'foo');
+          sinon.assert.calledWith(MasterProcess, sinon.match({
+            workerPath: 'foo'
+          }));
           done();
         });
       });

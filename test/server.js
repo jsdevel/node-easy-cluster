@@ -16,11 +16,13 @@ describe('server.js', function() {
     createServer : sinon.stub().returns(server)
   };
   var clustersController = sinon.stub();
+  var indexController = sinon.stub();
   var enforceKey = sinon.stub();
   var serverModule = prequire('../server.js', {
     'express':express,
     'http':http,
     './lib/controllers/api/clusters':clustersController,
+    './lib/controllers/api':indexController,
     './lib/util/middleware/enforceKey':enforceKey
   });
   var address;
@@ -56,10 +58,12 @@ describe('server.js', function() {
     });
 
     it('passes an app and the args to controllers', function() {
+      sinon.assert.calledWith(indexController, app, sinon.match(args));
       sinon.assert.calledWith(clustersController, app, sinon.match(args));
     });
 
     it('sets namespaces', function(){
+      sinon.assert.calledWith(app.namespace, '/api', sinon.match.func);
       sinon.assert.calledWith(app.namespace, '/api/clusters', sinon.match.func);
     });
 

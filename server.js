@@ -19,6 +19,9 @@ module.exports = function(args){
     }
   });
 
+  app.namespace('/api', function(){
+    require('./lib/controllers/api')(app, args);
+  });
   app.namespace('/api/clusters', function(){
     require('./lib/controllers/api/clusters')(app, args);
   });
