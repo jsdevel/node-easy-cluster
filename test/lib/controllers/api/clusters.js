@@ -13,7 +13,8 @@ describe('clusters controller', function() {
   var next = sinon.stub();
   var req = {
     body: null,
-    params: null
+    params: null,
+    query: null
   };
   var res = {
     json: sinon.stub()
@@ -35,6 +36,7 @@ describe('clusters controller', function() {
     next.reset();
     req.body = {};
     req.params = {};
+    req.query = {};
     res.json.reset();
     args = {};
     Cluster.create.reset();
@@ -99,7 +101,73 @@ describe('clusters controller', function() {
             null
           );
         });
+      });
 
+      describe('query by name', function() {
+        it('returns 200 when a cluster is found by that name', function() {
+          var cluster = {};
+          req.query.name = 'foo';
+          Cluster.read.callsArgWith(1, null, cluster);
+          getRoute('/clusters', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            'foo',
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            200,
+            cluster
+          );
+        });
+
+        it('returns 404 when a cluster is not found', function() {
+          req.query.name = 'boo';
+          Cluster.read.callsArgWith(1, null, null);
+          getRoute('/clusters', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            'boo',
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            404,
+            null
+          );
+        });
+      });
+
+      describe('query for all', function() {
+        it('returns 200 when clusters are found', function() {
+          var clusters = [{}];
+          Cluster.read.callsArgWith(0, null, clusters);
+          getRoute('/clusters', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            200,
+            clusters
+          );
+        });
+
+        it('returns 404 when no cluster is found', function() {
+          var clusters = [];
+          Cluster.read.callsArgWith(0, null, clusters);
+          getRoute('/clusters', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            404,
+            clusters
+          );
+        });
       });
     });
   });
