@@ -65,22 +65,6 @@ describe('clusters controller', function() {
         sinon.assert.calledWith(res.send, 204);
       });
     });
-    describe('POST', function() {
-      it('creates a new cluster', function(done) {
-        Cluster.create.callsArgWith(1, null, 5);
-        getRoute('/clusters', app.post.args)(req, res, next);
-        sinon.assert.calledWith(
-          Cluster.create,
-          sinon.match.object,
-          sinon.match.func
-        );
-        setTimeout(function(){
-          sinon.assert.calledWith(res.json, sinon.match(5));
-          sinon.assert.notCalled(next);
-          done();
-        }, 10);
-      });
-    });
 
     describe('GET', function() {
       describe('query by id', function() {
@@ -183,6 +167,23 @@ describe('clusters controller', function() {
             clusters
           );
         });
+      });
+    });
+
+    describe('POST', function() {
+      it('creates a new cluster', function(done) {
+        Cluster.create.callsArgWith(1, null, 5);
+        getRoute('/clusters', app.post.args)(req, res, next);
+        sinon.assert.calledWith(
+          Cluster.create,
+          sinon.match.object,
+          sinon.match.func
+        );
+        setTimeout(function(){
+          sinon.assert.calledWith(res.json, sinon.match(5));
+          sinon.assert.notCalled(next);
+          done();
+        }, 10);
       });
     });
   });
