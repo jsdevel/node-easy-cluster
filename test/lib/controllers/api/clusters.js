@@ -1,7 +1,6 @@
 'use strict';
 
 describe('clusters controller', function() {
-  var assert = require('assert');
   var getRoute = require('../../../test-helpers').getRoute;
   var prequire = require('proxyquire');
   var sinon = require('sinon');
@@ -13,13 +12,15 @@ describe('clusters controller', function() {
   };
   var next = sinon.stub();
   var req = {
-    body: null
+    body: null,
+    params: null
   };
   var res = {
     json: sinon.stub()
   };
   var Cluster = {
-    create: sinon.stub()
+    create: sinon.stub(),
+    read: sinon.stub()
   };
   var args;
   var module = prequire('../../../../lib/controllers/api/clusters', {
@@ -33,9 +34,11 @@ describe('clusters controller', function() {
     app.put.reset();
     next.reset();
     req.body = {};
+    req.params = {};
     res.json.reset();
     args = {};
     Cluster.create.reset();
+    Cluster.read.reset();
   });
 
   it('accepts an app and args', function() {
@@ -59,6 +62,44 @@ describe('clusters controller', function() {
           sinon.assert.notCalled(next);
           done();
         }, 10);
+      });
+    });
+
+    describe('GET', function() {
+      describe('query by id', function() {
+        it('returns 200 when a cluster is found', function() {
+          var cluster = {};
+          req.params.id = 7;
+          Cluster.read.callsArgWith(1, null, cluster);
+          getRoute('/clusters/:id', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            7,
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            200,
+            cluster
+          );
+        });
+
+        it('returns 404 when a cluster is not found', function() {
+          req.params.id = 7;
+          Cluster.read.callsArgWith(1, null, null);
+          getRoute('/clusters/:id', app.get.args)(req, res, next);
+          sinon.assert.calledWith(
+            Cluster.read,
+            7,
+            sinon.match.func
+          );
+          sinon.assert.calledWith(
+            res.json,
+            404,
+            null
+          );
+        });
+
       });
     });
   });
