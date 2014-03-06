@@ -17,10 +17,12 @@ describe('clusters controller', function() {
     query: null
   };
   var res = {
-    json: sinon.stub()
+    json: sinon.stub(),
+    send: sinon.stub()
   };
   var Cluster = {
     create: sinon.stub(),
+    delete: sinon.stub(),
     read: sinon.stub()
   };
   var args;
@@ -50,6 +52,19 @@ describe('clusters controller', function() {
   describe('/clusters', function() {
     beforeEach(module.bind(null, app, args));
 
+    describe('DELETE', function() {
+      it('calls delete on Cluster', function() {
+        req.params.id = 8;
+        Cluster.delete.callsArgWith(1, null);
+        getRoute('/clusters/:id', app.delete.args)(req, res, next);
+        sinon.assert.calledWith(
+          Cluster.delete,
+          8,
+          sinon.match.func
+        );
+        sinon.assert.calledWith(res.send, 204);
+      });
+    });
     describe('POST', function() {
       it('creates a new cluster', function(done) {
         Cluster.create.callsArgWith(1, null, 5);
