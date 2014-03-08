@@ -64,7 +64,6 @@ describe('server.js', function() {
 
     it('sets namespaces', function(){
       sinon.assert.calledWith(app.namespace, '/api', sinon.match.func);
-      sinon.assert.calledWith(app.namespace, '/api/clusters', sinon.match.func);
     });
 
     it('creates a server with the app', function(){

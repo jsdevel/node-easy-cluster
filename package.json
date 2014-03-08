@@ -27,11 +27,6 @@
       "name": "Joe Spencer",
       "email": "js.developer.undefined@gmail.com",
       "url": "https://github.com/jsdevel"
-    },
-    {
-      "name": "Joe Diaz",
-      "email": "joediaz0312@gmail.com",
-      "url": "https://github.com/JoeDiaz"
     }
   ],
   "license": "MIT",
@@ -51,6 +46,8 @@
     "express": "~3.4.8",
     "minimist": "0.0.7",
     "express-namespace": "~0.1.1",
-    "async": "~0.2.10"
+    "async": "~0.2.10",
+    "express-crud": "0.0.2",
+    "err-handler": "0.0.0"
   }
 }

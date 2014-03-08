@@ -1,6 +1,7 @@
 'use strict';
 
 require('express-namespace');
+require('express-crud');
 var express = require('express');
 var http = require('http');
 var enforceKey = require('./lib/util/middleware/enforceKey');
@@ -21,8 +22,6 @@ module.exports = function(args){
 
   app.namespace('/api', function(){
     require('./lib/controllers/api')(app, args);
-  });
-  app.namespace('/api/clusters', function(){
     require('./lib/controllers/api/clusters')(app, args);
   });
 };

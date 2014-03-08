@@ -71,7 +71,7 @@ describe('Cluster', function() {
 
     it('creates a new MasterProcess', function(done){
       Cluster.create({workerPath:'foo'}, function(err, id){
-        Cluster.read(id, function(err, cluster){
+        Cluster.read(id, null, function(err, cluster){
           cluster.master.should.equal(processInstance);
           sinon.assert.calledWithNew(MasterProcess);
           sinon.assert.calledWith(MasterProcess, sinon.match({
@@ -169,7 +169,7 @@ describe('Cluster', function() {
 
     describe('query byId', function() {
       it('returns null when no cluster exists with the given id', function(done) {
-        Cluster.read(1, function(err, results){
+        Cluster.read(1, null, function(err, results){
           assert(!err);
           assert(results === null);
           done();
@@ -180,7 +180,7 @@ describe('Cluster', function() {
         beforeEach(createClusters);
 
         it('returns the matching cluster', function() {
-          Cluster.read(1, function(err, results){
+          Cluster.read(1, null, function(err, results){
             assert(!err);
             results.should.match({
               id:1,
@@ -193,7 +193,7 @@ describe('Cluster', function() {
 
     describe('query byName', function() {
       it('returns null when no cluster exists with the given name', function(done) {
-        Cluster.read('foomanchu', function(err, results){
+        Cluster.read({name:'foomanchu'}, function(err, results){
           assert(!err);
           assert(results === null);
           done();
@@ -204,7 +204,7 @@ describe('Cluster', function() {
         beforeEach(createClusters);
 
         it('returns the matching cluster', function() {
-          Cluster.read('foomanchu', function(err, results){
+          Cluster.read({name:'foomanchu'}, function(err, results){
             assert(!err);
             results.should.match({
               id:1,
@@ -212,15 +212,6 @@ describe('Cluster', function() {
               workerPath:'/some/path/1'
             });
           });
-        });
-      });
-    });
-
-    describe('query by unknown type', function() {
-      it('provides an Error to callback', function() {
-        Cluster.read(void 0, function(err, results){
-          assert(!results);
-          err.should.be.an.instanceOf(Error);
         });
       });
     });
@@ -270,7 +261,7 @@ describe('Cluster', function() {
     describe('#handleUpdate', function() {
       beforeEach(createClusters);
       it('does not require workerPath if workerPath is already set on the Cluster', function(done) {
-        Cluster.read(0, function(err, cluster){
+        Cluster.read(0, null, function(err, cluster){
           cluster.handleUpdate({});
           done();
         });
