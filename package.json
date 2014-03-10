@@ -9,6 +9,7 @@
   "scripts": {
     "jshint": "jshint server.js lib bin && jshint --config .jshintrc-test test",
     "mocha": "mocha --debug-brk -w",
+    "integration": "mocha -w './integration/*.js'",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "report": "istanbul report cobertura",
     "test": "npm run-script jshint && npm run-script cover && npm run-script report"
@@ -40,7 +41,8 @@
     "sinon": "~1.8.2",
     "jshint": "~2.4.3",
     "glob": "~3.2.8",
-    "should": "~3.1.2"
+    "should": "~3.1.2",
+    "request": "~2.34.0"
   },
   "dependencies": {
     "express": "~3.4.8",

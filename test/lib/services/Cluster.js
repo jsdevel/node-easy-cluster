@@ -8,8 +8,10 @@ describe('Cluster', function() {
     fileExists:null
   };
   var processInstance = {
+    pid: 5,
     startupError:null
   };
+  processInstance.circular = processInstance;
   var MasterProcess = sinon.stub().returns(processInstance);
   var modulePath = '../../../lib/services/Cluster';
   var Cluster;
@@ -72,7 +74,7 @@ describe('Cluster', function() {
     it('creates a new MasterProcess', function(done){
       Cluster.create({workerPath:'foo'}, function(err, id){
         Cluster.read(id, null, function(err, cluster){
-          cluster.master.should.equal(processInstance);
+          cluster.master.pid.should.equal(5);
           sinon.assert.calledWithNew(MasterProcess);
           sinon.assert.calledWith(MasterProcess, sinon.match({
             workerPath: 'foo'
@@ -139,6 +141,28 @@ describe('Cluster', function() {
   });
 
   describe('#read', function() {
+    describe('result', function() {
+      var cluster;
+
+      beforeEach(function(done) {
+        createClusters(function(){
+          Cluster.read(0, null, function(err, results){
+            cluster = results;
+            done();
+          });
+        });
+
+      });
+
+      it('prevents circular references in results', function() {
+        JSON.stringify(cluster);
+      });
+
+      it('replaces master process object with pid', function() {
+        cluster.master.pid.should.equal(5);
+      });
+    });
+
     describe('query all', function() {
       it('returns empty array when no cluster exists', function(done) {
         Cluster.read(function(err, results){
@@ -252,18 +276,6 @@ describe('Cluster', function() {
           assert(!err);
           results.workerPath.should.equal('/some/new/path/0');
           results.name.should.equal('dog');
-        });
-      });
-    });
-  });
-
-  describe('Cluster', function() {
-    describe('#handleUpdate', function() {
-      beforeEach(createClusters);
-      it('does not require workerPath if workerPath is already set on the Cluster', function(done) {
-        Cluster.read(0, null, function(err, cluster){
-          cluster.handleUpdate({});
-          done();
         });
       });
     });

@@ -4,6 +4,8 @@ describe('server.js', function() {
   var sinon = require('sinon');
   var prequire = require('proxyquire');
   var express = sinon.stub();
+  express.json = sinon.stub();
+  express.urlencoded = sinon.stub();
   var app = {
     namespace:sinon.stub().callsArg(1),
     use:sinon.stub()
@@ -35,6 +37,10 @@ describe('server.js', function() {
     args = {
       'port':0
     };
+    express.json.reset();
+    express.urlencoded.reset();
+    express.json.returns('jsonMiddleware');
+    express.urlencoded.returns('urlencodedMiddleware');
     app.namespace.reset();
     app.use.reset();
     http.createServer.reset();
@@ -60,6 +66,14 @@ describe('server.js', function() {
     it('passes an app and the args to controllers', function() {
       sinon.assert.calledWith(indexController, app, sinon.match(args));
       sinon.assert.calledWith(clustersController, app, sinon.match(args));
+    });
+
+    it('adds json middleware to the app', function() {
+      sinon.assert.calledWith(app.use, 'jsonMiddleware');
+    });
+
+    it('adds urlencoded middleware to the app', function() {
+      sinon.assert.calledWith(app.use, 'urlencodedMiddleware');
     });
 
     it('sets namespaces', function(){

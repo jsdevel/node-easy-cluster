@@ -2,14 +2,15 @@
 
 describe('MasterProcess', function() {
   var assert = require('assert');
-  var prequire = require('proxyquire');
+  var prequire = require('proxyquire').noCallThru();
   var path = require('path');
   var sinon = require('sinon');
   var on = sinon.stub();
-  var master = {
+  var returnedChildProcess = {
+    pid:6,
     on:on
   };
-  var spawn = sinon.stub().returns(master);
+  var spawn = sinon.stub().returns(returnedChildProcess);
   var childProcess = {
     spawn:spawn
   };
@@ -21,23 +22,23 @@ describe('MasterProcess', function() {
     '../../util/fsHelpers': fsHelpers
   });
   var workerPath = 'workerPath';
-  var clusterStrategy = 'simple';
 
   beforeEach(function() {
-    master.on.reset();
+    returnedChildProcess.on.reset();
     childProcess.spawn.reset();
     fsHelpers.fileExists.reset();
     fsHelpers.fileExists.returns(true);
   });
 
   it('starts the workerPath with a default strategy', function() {
-    var process = new MasterProcess({
+    var master = new MasterProcess({
       workerPath: workerPath
     });
     sinon.assert.calledWith(
       spawn,
-      getPathOf('simple'),
+      'node',
       sinon.match([
+        getPathOf('simple'),
         '--workerPath',
         workerPath
       ]),
@@ -47,8 +48,15 @@ describe('MasterProcess', function() {
       })
     );
     sinon.assert.calledWith(on, 'close', sinon.match.func);
-    process.workerPath.should.equal(workerPath);
-    process.master.should.equal(master);
+    master.workerPath.should.equal(workerPath);
+    master.process.should.equal(returnedChildProcess);
+  });
+
+  it('sets pid', function() {
+    var process = new MasterProcess({
+      workerPath: workerPath
+    });
+    process.pid.should.equal(6);
   });
 
   it('allows the strategy to be configurable', function() {
@@ -58,8 +66,12 @@ describe('MasterProcess', function() {
     });
     sinon.assert.calledWith(
       spawn,
-      getPathOf('graceful'),
-      sinon.match.array,
+      'node',
+      [
+        getPathOf('graceful'),
+        '--workerPath',
+        workerPath
+      ],
       sinon.match.object
     );
   });
@@ -77,15 +89,15 @@ describe('MasterProcess', function() {
 
   describe('on closing', function() {
     it('sets no startupError if code is falsey', function(){
-      var process = new MasterProcess({workerPath:workerPath});
-      process.master.on.args[0][1](0);
-      assert.equal(process.startupError, null);
+      var master = new MasterProcess({workerPath:workerPath});
+      master.process.on.args[0][1](0);
+      assert.equal(master.startupError, null);
     });
 
     it('sets startupError if code is truthy', function() {
-      var process = new MasterProcess({workerPath:workerPath});
-      process.master.on.args[0][1](1);
-      process.startupError.should.be.an.instanceOf(Error);
+      var master = new MasterProcess({workerPath:workerPath});
+      master.process.on.args[0][1](1);
+      master.startupError.should.be.an.instanceOf(Error);
     });
   });
 
