@@ -1,1 +1,4 @@
 /test/
+.gitignore
+.jshint*
+.travis.yml
