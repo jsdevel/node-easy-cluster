@@ -9,10 +9,10 @@
   "scripts": {
     "jshint": "jshint server.js lib bin && jshint --config .jshintrc-test test",
     "mocha": "mocha --debug-brk -w",
-    "integration": "mocha -w './integration/*.js'",
+    "integration": "mocha './integration/*.js'",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "report": "istanbul report cobertura",
-    "test": "npm run-script jshint && npm run-script cover && npm run-script report"
+    "test": "npm run jshint && npm run cover && npm run integration"
   },
   "repository": {
     "type": "git",
