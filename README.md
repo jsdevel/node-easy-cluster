@@ -50,7 +50,7 @@ Allows you to manage clusters in the daemon.  Each cluster starts a new master p
 
 #####Properties
 * `{id}` - The id of the cluster.  Every cluster has this.  Ids are numerical.
-* `master` - An object that represents the master process and various statistics related to the cluster.
+* `{master}` - An object that represents the master process and various statistics related to the cluster.
   * `pid` - The pid of the master process.
 * `[name]` - This is the name of the cluster.  Names are not shared between clusters, so they act as a friendly id.
 * `{startupTime}` - The amount of time in milliseconds it took to start the clusters initially.
