@@ -26,10 +26,10 @@ describe('clusters', function() {
     setTimeout(done, 1000);
   });
 
-  it('returns null initially', function(done) {
-    request(clusters, function(err, res, body){
+  it('returns empty array initially', function(done) {
+    request(clusters, {json:true}, function(err, res, body){
       res.statusCode.should.equal(404);
-      body.should.equal('null');
+      body.length.should.equal(0);
       done();
     });
   });

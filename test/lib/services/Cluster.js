@@ -177,7 +177,7 @@ describe('Cluster', function() {
 
         it('should return an array of clusters', function(done) {
           Cluster.delete(1, function(){
-            Cluster.read(function(err, results){
+            Cluster.read({}, function(err, results){
               assert(!err);
               results.should.be.an.Array;
               results.should.match([
