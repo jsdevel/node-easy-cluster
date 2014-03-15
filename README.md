@@ -26,7 +26,7 @@ your deployments in production to be.
 `npm install -g easy-cluster`
 
 ##Usage
-Once you've installed the package, start the daemon by running `easy-cluster` from a tty.
+Once you've installed the package, start the daemon by running `ecluster` from a tty.
 
 Clusters are managed via a REST API, so starting the daemon is the initial step needed before moving forward.
 
