@@ -30,7 +30,36 @@ Once you've installed the package, start the daemon by running `easy-cluster` fr
 
 Clusters are managed via a REST API, so starting the daemon is the initial step needed before moving forward.
 
-###API
-This is a high level overview of the REST API understood by the daemon:
-* `/api` - Prints everything daemon related.
-* `/api/clusters` - Allows you to manage clusters in the daemon.
+##API Overview
+This is the REST API understood by the daemon.  
+
+Property names enclosed in `[]` are considered optional for `POST` operations.
+Property names enclosed in `{}` are ignored for `POST` operations.
+
+###`/api`
+Prints everything daemon related.
+
+#####Properties
+* `clusters` - An array of clusters.
+
+#####Methods
+* `GET /api` - Retrieves all data about the app.
+
+###`/api/clusters`
+Allows you to manage clusters in the daemon.  Each cluster starts a new master process that forks workers.  The process of loading, reloading, and responding to the death of workers is governed by a strategy.  The default strategy is "simple".
+
+#####Properties
+* `{id}` - The id of the cluster.  Every cluster has this.  Ids are numerical.
+* `master` - An object that represents the master process and various statistics related to the cluster.
+  * `pid` - The pid of the master process.
+* `[name]` - This is the name of the cluster.  Names are not shared between clusters, so they act as a friendly id.
+* `{startupTime}` - The amount of time in milliseconds it took to start the clusters initially.
+* `workerPath` - This is an absolute path to a worker file.  The cluster will use this when forking workers.
+
+#####Methods
+* `DELETE /api/clusters/:id` - Deletes a cluster.
+* `GET /api/clusters` - Retrieves all clusters currently loaded.
+* `GET /api/clusters/:id` - Retrieves a cluster by id.
+* `GET /api/clusters?name=name` - Retrieves a cluster by name.
+* `POST /api/clusters` - Creates a cluster.
+* `PUT /api/clusters/:id` - Updates a cluster.
