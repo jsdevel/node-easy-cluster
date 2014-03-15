@@ -3,7 +3,7 @@
 describe('Cluster', function() {
   var assert = require('assert');
   var sinon = require('sinon');
-  var prequire = require('proxyquire');
+  var prequire = require('proxyquire').noCallThru();
   var fsHelpers = {
     fileExists:null
   };
@@ -77,7 +77,8 @@ describe('Cluster', function() {
           cluster.master.pid.should.equal(5);
           sinon.assert.calledWithNew(MasterProcess);
           sinon.assert.calledWith(MasterProcess, sinon.match({
-            workerPath: 'foo'
+            workerPath: 'foo',
+            strategy: 'simple'
           }));
           done();
         });

@@ -30,9 +30,10 @@ describe('MasterProcess', function() {
     fsHelpers.fileExists.returns(true);
   });
 
-  it('starts the workerPath with a default strategy', function() {
+  it('starts the workerPath with the given strategy', function() {
     var master = new MasterProcess({
-      workerPath: workerPath
+      workerPath: workerPath,
+      strategy: 'simple'
     });
     sinon.assert.calledWith(
       spawn,
@@ -54,7 +55,8 @@ describe('MasterProcess', function() {
 
   it('sets pid', function() {
     var process = new MasterProcess({
-      workerPath: workerPath
+      workerPath: workerPath,
+      strategy: 'simple'
     });
     process.pid.should.equal(6);
   });
@@ -76,6 +78,14 @@ describe('MasterProcess', function() {
     );
   });
 
+  it('throws an error if the strategy is not present', function() {
+    assert.throws(function(){
+      new MasterProcess({
+        workerPath: workerPath
+      });
+    });
+  });
+
   it('throws an error if the strategy does not exist', function() {
     fsHelpers.fileExists.returns(false);
     assert.throws(function(){
@@ -89,13 +99,13 @@ describe('MasterProcess', function() {
 
   describe('on closing', function() {
     it('sets no startupError if code is falsey', function(){
-      var master = new MasterProcess({workerPath:workerPath});
+      var master = new MasterProcess({workerPath:workerPath, strategy: 'simple'});
       master.process.on.args[0][1](0);
       assert.equal(master.startupError, null);
     });
 
     it('sets startupError if code is truthy', function() {
-      var master = new MasterProcess({workerPath:workerPath});
+      var master = new MasterProcess({workerPath:workerPath, strategy: 'simple'});
       master.process.on.args[0][1](1);
       master.startupError.should.be.an.instanceOf(Error);
     });
