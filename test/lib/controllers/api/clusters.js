@@ -7,7 +7,7 @@ describe('clusters controller', function() {
   var crud = sinon.stub();
   var app = {crud:crud};
   var Cluster = {};
-  var module = prequire('../../../../lib/controllers/api/clusters', {
+  var module = prequire('../../../../lib/controllers/app/clusters', {
     '../../services/Cluster': Cluster,
     'express-crud':crud
   });

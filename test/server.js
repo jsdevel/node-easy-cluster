@@ -23,8 +23,8 @@ describe('server.js', function() {
   var serverModule = prequire('../server.js', {
     'express':express,
     'http':http,
-    './lib/controllers/api/clusters':clustersController,
-    './lib/controllers/api':indexController,
+    './lib/controllers/app/clusters':clustersController,
+    './lib/controllers/app':indexController,
     './lib/util/middleware/enforceKey':enforceKey
   });
   var address;
@@ -77,7 +77,7 @@ describe('server.js', function() {
     });
 
     it('sets namespaces', function(){
-      sinon.assert.calledWith(app.namespace, '/api', sinon.match.func);
+      sinon.assert.calledWith(app.namespace, '/app', sinon.match.func);
     });
 
     it('creates a server with the app', function(){

@@ -36,16 +36,16 @@ This is the REST API understood by the daemon.
 Property names enclosed in `[]` are considered optional for `POST` operations.
 Property names enclosed in `{}` are ignored for `POST` operations.
 
-###`/api`
+###`/app`
 Prints everything daemon related.
 
 #####Properties
 * `clusters` - An array of clusters.
 
 #####Methods
-* `GET /api` - Retrieves all data about the app.
+* `GET /app` - Retrieves all data about the app.
 
-###`/api/clusters`
+###`/app/clusters`
 Allows you to manage clusters in the daemon.  Each cluster starts a new master process that forks workers.  The process of loading, reloading, and responding to the death of workers is governed by a strategy.  The default strategy is "simple".
 
 #####Properties
@@ -59,9 +59,9 @@ Allows you to manage clusters in the daemon.  Each cluster starts a new master p
 * `workerPath` - This is an absolute path to a worker file.  The cluster will use this when forking workers.
 
 #####Methods
-* `DELETE /api/clusters/:id` - Deletes a cluster.
-* `GET /api/clusters` - Retrieves all clusters currently loaded.
-* `GET /api/clusters/:id` - Retrieves a cluster by id.
-* `GET /api/clusters?name=name` - Retrieves a cluster by name.
-* `POST /api/clusters` - Creates a cluster.
-* `PUT /api/clusters/:id` - Updates a cluster.
+* `DELETE /app/clusters/:id` - Deletes a cluster.
+* `GET /app/clusters` - Retrieves all clusters currently loaded.
+* `GET /app/clusters/:id` - Retrieves a cluster by id.
+* `GET /app/clusters?name=name` - Retrieves a cluster by name.
+* `POST /app/clusters` - Creates a cluster.
+* `PUT /app/clusters/:id` - Updates a cluster.

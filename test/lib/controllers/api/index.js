@@ -19,7 +19,7 @@ describe('index controller', function(){
     json: sinon.stub()
   };
   var next = sinon.stub();
-  var module = prequire('../../../../lib/controllers/api', {
+  var module = prequire('../../../../lib/controllers/app', {
     '../../services/Cluster': Cluster
   });
 
