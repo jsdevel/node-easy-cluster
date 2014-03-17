@@ -8,7 +8,7 @@
   "preferGlobal": true,
   "scripts": {
     "jshint": "jshint server.js lib bin && jshint --config .jshintrc-test test",
-    "mocha": "mocha --debug-brk -w",
+    "mocha": "mocha -w",
     "integration": "mocha './integration/*.js'",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "report": "istanbul report cobertura",

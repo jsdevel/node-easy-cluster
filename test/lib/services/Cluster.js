@@ -8,17 +8,31 @@ describe('Cluster', function() {
     fileExists:null
   };
   var processInstance = {
+    process:{
+      kill: sinon.stub()
+    },
     pid: 5,
     startupError:null
   };
   processInstance.circular = processInstance;
+  var processStub = {
+    exit: sinon.stub(),
+    get nextTick(){
+      return process.nextTick.bind(process);
+    },
+    on: sinon.stub()
+  };
   var MasterProcess = sinon.stub().returns(processInstance);
   var modulePath = '../../../lib/services/Cluster';
   var Cluster;
 
   beforeEach(function() {
     delete require.cache[modulePath];
+    processStub.exit.reset();
+    processStub.on.reset();
+    processInstance.process.kill.reset();
     Cluster = prequire(modulePath, {
+      './service-utils/process': processStub,
       '../util/fsHelpers':fsHelpers,
       './MasterProcess':MasterProcess
     });
@@ -27,6 +41,25 @@ describe('Cluster', function() {
     fsHelpers.fileExists = sinon.stub().returns(true);
     fsHelpers.fileExists.reset();
   });
+
+  ['SIGINT', 'SIGTERM'].forEach(function(sig){
+    it('listens on '+sig, function() {
+      sinon.assert.calledWith(processStub.on, sig, sinon.match.func);
+    });
+  });
+
+  describe('in response to a process event', function() {
+    beforeEach(createClusters);
+
+    it('kills each cluster currently loaded', function() {
+      processStub.on.args.filter(function(arg){
+        return arg[0] === 'SIGINT';
+      })[0][1]();
+      sinon.assert.called(processInstance.process.kill);
+      sinon.assert.called(processStub.exit);
+    });
+  });
+
 
   describe('#create', function() {
     it('creates new Clusters', function(done) {
