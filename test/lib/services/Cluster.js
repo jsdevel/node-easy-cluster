@@ -246,6 +246,13 @@ describe('Cluster', function() {
             });
           });
         });
+
+        it('casts id to number', function() {
+          Cluster.read('1', null, function(err, results){
+            assert(!err);
+            results.id.should.equal(1);
+          });
+        });
       });
     });
 
