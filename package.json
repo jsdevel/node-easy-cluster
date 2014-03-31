@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/godaddy/node-easy-cluster.git"
+    "url": "https://github.com/jsdevel/node-easy-cluster.git"
   },
   "keywords": [
     "cluster",
@@ -32,7 +32,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/godaddy/node-easy-cluster/issues"
+    "url": "https://github.com/jsdevel/node-easy-cluster/issues"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
