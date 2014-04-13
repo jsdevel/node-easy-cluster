@@ -2,6 +2,7 @@
 
 describe('Cluster Model', function(){
   var assert = require('assert');
+  var sinon = require('sinon');
   var Cluster = require('../../../lib/models/Cluster');
   var model;
   var process;
@@ -12,7 +13,8 @@ describe('Cluster Model', function(){
       workerPath: '/asdfasdf'
     };
     process = {
-      pid: 143
+      pid: 143,
+      kill: sinon.stub()
     };
   });
 
@@ -22,10 +24,6 @@ describe('Cluster Model', function(){
 
   it('is instantiable', function(){
     new Cluster(model, process);
-  });
-
-  it('assigns process as a non enumerable property', function(){
-
   });
 
   describe('model arg', function(){
@@ -65,29 +63,21 @@ describe('Cluster Model', function(){
     });
 
   });
+
   describe('instance', function(){
     var cluster;
     beforeEach(function(){
       cluster = new Cluster(model, process);
     });
 
-    it('must not have .process as enumberable', function(){
-      cluster.process.should.equal(process);
-      assert(!hasEnumerable(cluster, 'process'));
+    it('proxies #kill to process#kill', function(){
+      cluster.kill();
+      sinon.assert.called(process.kill);
+    });
+
+    it('can be converted to JSON', function(){
+      var json = JSON.stringify(cluster);
+      console.log(json);
     });
   });
-
-  //this should be removed once https://github.com/visionmedia/should.js/pull/199
-  //is accepted and published.
-  function hasEnumerable(obj, name){
-    var enumerable;
-    var prop;
-    for(prop in obj){
-      if(obj.hasOwnProperty(prop) && prop === name){
-        enumerable = name;
-        break;
-      }
-    }
-    return !!enumerable;
-  }
 });
