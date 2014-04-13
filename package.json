@@ -41,7 +41,7 @@
     "sinon": "~1.8.2",
     "jshint": "~2.4.3",
     "glob": "~3.2.8",
-    "should": "~3.1.2",
+    "should": "~3.3.0",
     "request": "~2.34.0"
   },
   "dependencies": {
