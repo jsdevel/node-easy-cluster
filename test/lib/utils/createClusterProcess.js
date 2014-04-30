@@ -2,8 +2,8 @@
 
 describe('createClusterProcess', function(){
   var assert = require('assert');
-  var getFixture = require('../../../fixtures/getFixture.js');
-  var sut = require('../../../../lib/services/service-utils/createClusterProcess.js');
+  var getFixture = require('../../fixtures/getFixture.js');
+  var sut = require('../../../lib/utils/createClusterProcess.js');
 
   sut.should.be.type('function');
 

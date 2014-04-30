@@ -25,7 +25,7 @@ describe('server.js', function() {
     'http':http,
     './lib/controllers/app/clusters':clustersController,
     './lib/controllers/app':indexController,
-    './lib/util/middleware/enforceKey':enforceKey
+    './lib/middleware/enforceKey':enforceKey
   });
   var address;
   var args;

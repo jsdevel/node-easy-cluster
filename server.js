@@ -2,7 +2,7 @@
 
 var express = require('express');
 var http = require('http');
-var enforceKey = require('./lib/util/middleware/enforceKey');
+var enforceKey = require('./lib/middleware/enforceKey');
 
 require('express-crud');
 
