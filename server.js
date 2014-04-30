@@ -3,6 +3,7 @@
 var express = require('express');
 var http = require('http');
 var enforceKey = require('./lib/middleware/enforceKey');
+var jsonErrors = require('./lib/middleware/jsonErrors');
 
 require('express-crud');
 
@@ -20,6 +21,8 @@ module.exports = function(args){
 
   require('./lib/controllers')(app, args);
   require('./lib/controllers/clusters')(app, args);
+
+  app.use(jsonErrors);
 
   server = http.createServer(app);
   server.listen(args.port, function(){

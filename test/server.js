@@ -20,12 +20,14 @@ describe('server.js', function() {
   var clustersController = sinon.stub();
   var indexController = sinon.stub();
   var enforceKey = sinon.stub();
+  var jsonErrors = sinon.stub();
   var serverModule = prequire('../server.js', {
     'express':express,
     'http':http,
     './lib/controllers/app/clusters':clustersController,
     './lib/controllers/app':indexController,
-    './lib/middleware/enforceKey':enforceKey
+    './lib/middleware/enforceKey':enforceKey,
+    './lib/middleware/jsonErrors':jsonErrors
   });
   var address;
   var args;
@@ -48,7 +50,7 @@ describe('server.js', function() {
     server.address.reset();
     server.address.returns(address);
     enforceKey.reset();
-    enforceKey.returns('enforceKey');
+    jsonErrors.returns('jsonErrors');
     express.reset();
     express.returns(app);
     sinon.stub(console, 'log');
@@ -111,6 +113,7 @@ describe('server.js', function() {
       serverModule(args);
       sinon.assert.calledWith(app.use, 'enforceKey');
       sinon.assert.calledWith(enforceKey, 'wooot');
+      sinon.assert.calledWith(app.use, enforceKey);
     });
   });
 });
