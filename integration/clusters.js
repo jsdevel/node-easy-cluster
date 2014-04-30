@@ -7,7 +7,7 @@ describe('clusters', function() {
   var spawn = require('child_process').spawn;
   var path = require('path');
   var easyCluster;
-  var clusters = 'http://localhost:18675/app/clusters';
+  var clusters = 'http://localhost:18675/clusters';
   //process.env.NODE_DEBUG = 'request';
 
   before(function(done) {

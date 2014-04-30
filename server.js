@@ -1,14 +1,14 @@
 'use strict';
 
-require('express-namespace');
-require('express-crud');
 var express = require('express');
 var http = require('http');
 var enforceKey = require('./lib/util/middleware/enforceKey');
 
+require('express-crud');
+
 module.exports = function(args){
   var app = express();
-  var server = http.createServer(app);
+  var server;
 
   app.use(express.json());
   app.use(express.urlencoded());
@@ -16,14 +16,16 @@ module.exports = function(args){
   if(args.key){
     app.use(enforceKey(args.key));
   }
+
+
+  require('./lib/controllers')(app, args);
+  require('./lib/controllers/clusters')(app, args);
+
+  server = http.createServer(app);
   server.listen(args.port, function(){
     if(args.port === 0 || !args.silent){
       console.log('Listening on port '+server.address().port);
     }
   });
 
-  app.namespace('/app', function(){
-    require('./lib/controllers/app')(app, args);
-    require('./lib/controllers/app/clusters')(app, args);
-  });
 };
