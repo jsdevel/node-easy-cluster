@@ -19,6 +19,8 @@
   "undef":true,
   "globals":{
     "it":true,
+    "xit":true,
+    "xdescribe":true,
     "describe":true,
     "before":true,
     "after":true,

@@ -76,8 +76,7 @@ describe('Cluster Model', function(){
     });
 
     it('can be converted to JSON', function(){
-      var json = JSON.stringify(cluster);
-      console.log(json);
+      JSON.stringify(cluster);
     });
   });
 });

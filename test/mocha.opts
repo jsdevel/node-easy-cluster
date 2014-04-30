@@ -1,4 +1,4 @@
---reporter dot
+-t 5000
 --ui bdd
 --recursive
 -r should

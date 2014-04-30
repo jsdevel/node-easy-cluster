@@ -10,7 +10,7 @@
     "jshint": "jshint server.js lib bin && jshint --config .jshintrc-test test",
     "mocha": "mocha -w",
     "integration": "mocha './integration/*.js'",
-    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "cover": "istanbul cover _mocha -- './test/lib/**/*.js' './test/bin/**/*.js'",
     "report": "istanbul report cobertura",
     "test": "npm run jshint && npm run cover && npm run integration"
   },
@@ -50,6 +50,7 @@
     "express-namespace": "~0.1.1",
     "async": "~0.2.10",
     "express-crud": "0.0.2",
-    "err-handler": "0.0.0"
+    "err-handler": "0.0.0",
+    "lodash": "~2.4.1"
   }
 }

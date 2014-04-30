@@ -3,7 +3,7 @@
 
 describe('clusters', function() {
   var assert = require('assert');
-  var request = require('request');
+  var request = require('request').defaults({json:true});
   var spawn = require('child_process').spawn;
   var path = require('path');
   var easyCluster;
@@ -13,41 +13,49 @@ describe('clusters', function() {
   before(function(done) {
     easyCluster = spawn(
       path.resolve(__dirname, '..', 'bin', 'easy-cluster.js'),
-      [],
-      {
-        stdio:'inherit'
-      }
+      []
     );
-    setTimeout(done, 1000);
+    easyCluster.stdout.pipe(process.stdout);
+    easyCluster.stderr.pipe(process.stderr);
+    setTimeout(done, 500);
   });
 
   after(function(done) {
     easyCluster.kill();
-    setTimeout(done, 1000);
+    setTimeout(done, 500);
   });
 
   it('returns empty array initially', function(done) {
     request(clusters, {json:true}, function(err, res, body){
       res.statusCode.should.equal(404);
-      body.length.should.equal(0);
       done();
     });
   });
 
   it('can create clusters', function(done) {
     createCluster(function(err, req, body){
-      body.should.equal('0');
+      body.should.have.properties({
+        id:0,
+        name:'shaman'
+      });
       done();
     });
   });
 
   it('can retrieve a cluster by name', function(done) {
-    request(clusters, {json:true, qs:{name:'shaman'}}, function(err, res, body){
-      body.name.should.equal('shaman');
-      body.master.pid.should.be.type('number');
+    request(clusters+'?name=shaman', function(err, res, body){
+      body[0].should.have.properties(['name', 'id', 'pid']);
       done();
     });
   });
+
+  it('can retrieve a cluster by id', function(done) {
+    request(clusters+'/0', function(err, res, body){
+      body.should.have.properties(['name', 'id', 'pid']);
+      done();
+    });
+  });
+
 
   function createCluster(cb){
     request.post({
@@ -59,6 +67,5 @@ describe('clusters', function() {
     }, function(err, req, body){
       cb(err, req, body);
     });
-
   }
 });
