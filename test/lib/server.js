@@ -21,13 +21,13 @@ describe('server.js', function() {
   var indexController = sinon.stub();
   var enforceKey = sinon.stub();
   var jsonErrors = sinon.stub();
-  var serverModule = prequire('../server.js', {
+  var serverModule = prequire('../../lib/server.js', {
     'express':express,
     'http':http,
-    './lib/controllers/app/clusters':clustersController,
-    './lib/controllers/app':indexController,
-    './lib/middleware/enforceKey':enforceKey,
-    './lib/middleware/jsonErrors':jsonErrors
+    './controllers/clusters':clustersController,
+    './controllers':indexController,
+    './middleware/enforceKey':enforceKey,
+    './middleware/jsonErrors':jsonErrors
   });
   var address;
   var args;
@@ -50,6 +50,7 @@ describe('server.js', function() {
     server.address.reset();
     server.address.returns(address);
     enforceKey.reset();
+    enforceKey.returns('enforceKey');
     jsonErrors.returns('jsonErrors');
     express.reset();
     express.returns(app);
@@ -76,10 +77,6 @@ describe('server.js', function() {
 
     it('adds urlencoded middleware to the app', function() {
       sinon.assert.calledWith(app.use, 'urlencodedMiddleware');
-    });
-
-    it('sets namespaces', function(){
-      sinon.assert.calledWith(app.namespace, '/app', sinon.match.func);
     });
 
     it('creates a server with the app', function(){
@@ -113,7 +110,6 @@ describe('server.js', function() {
       serverModule(args);
       sinon.assert.calledWith(app.use, 'enforceKey');
       sinon.assert.calledWith(enforceKey, 'wooot');
-      sinon.assert.calledWith(app.use, enforceKey);
     });
   });
 });

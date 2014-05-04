@@ -36,7 +36,7 @@ describe('easy-cluster', function() {
 
   function setModule(){
     module = prequire('../../bin/easy-cluster', {
-      '../server':server
+      '../lib/server':server
     });
   }
 });
