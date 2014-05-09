@@ -50,10 +50,8 @@ Allows you to manage clusters in the daemon.  Each cluster starts a new master p
 
 #####Properties
 * `{id}` - The id of the cluster.  Every cluster has this.  Ids are numerical.
-* `{master}` - An object that represents the master process and various statistics related to the cluster.
-  * `pid` - The pid of the master process.
+* `pid` - The pid of the master process.
 * `[name]` - This is the name of the cluster.  Names are not shared between clusters, so they act as a friendly id.
-* `{startupTime}` - The amount of time in milliseconds it took to start the clusters initially.
 * `[strategy]` - The strategy the cluster uses to manage workers.  By default the value is `simple`.  These are valid strategies:
   * `simple` - Workers are killed immediately without notice on any update.  When a worker dies, a new one is immediately created.
 * `workerPath` - This is an absolute path to a worker file.  The cluster will use this when forking workers.
