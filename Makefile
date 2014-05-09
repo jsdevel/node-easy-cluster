@@ -7,7 +7,7 @@ instrument:
 	@istanbul instrument -o lib-cov/ lib
 
 integration:
-	@mocha './integration/*.js'
+	@./integration/run.bash
 
 lint:
 	@jshint lib bin && jshint --config ./test/.jshintrc test
